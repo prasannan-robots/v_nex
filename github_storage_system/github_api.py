@@ -1,6 +1,34 @@
 from github import Github
 import os
 
+# Class to handle files between flask and github
+class git_file_server:
+
+    # Initialing with path_of_upload_folder as the path where the uploaded files will be
+    # Needs a environmental variable with GITHUB_TOKEN as the github api token and GITHUB_REPO as the link to the github repository where the files will be stored
+    def __init__(self,path_of_upload_folder):
+        self.path_of_upload_folder=path_of_upload_folder
+        self.token = os.getenv("GITHUB_TOKEN")
+        self.github_object = Github(self.token)
+        self.branch = "main"
+        self.update_files=[]
+        self.repository = self.github_object.get_repo(os.getenv("GITHUB_REPO"))
+    
+    # Intended to push all files in upload_folder to github_repository
+    def add_to_update_file(self):
+        for filename in os.scandir(self.path_of_upload_folder):
+            if filename.is_file():
+                f = open(filename.path,"rb")
+                content = f.read()
+                self.repository.create_file(filename.path,content,branch="main")
+                if os.path.exists(filename.path):
+                    os.remove(filename.path)
+                
+        
+                
+
+
+
 class github_store:
     def __init__(self,file_path=None):
         if file_path == None:
