@@ -20,7 +20,7 @@ class git_file_server:
             if filename.is_file():
                 f = open(filename.path,"rb")
                 content = f.read()
-                self.repository.create_file(filename.path,content,branch="main")
+                self.repository.create_file(filename.path,f"Updated {filename.path}",content,branch="main")
                 if os.path.exists(filename.path):
                     os.remove(filename.path)
                 
