@@ -15,7 +15,7 @@ class git_file_server:
         self.pushed_files=[] # Files pushed till now
         self.files_in_github=[] # Files that are in github_repository
         self.repo = os.getenv("GITHUB_REPO")
-        self.repository = self.github_object.get_repo(repo)
+        self.repository = self.github_object.get_repo(self.repo)
     
     # Intend to push file to github_repo
     def push_file(self,filename):
@@ -31,7 +31,7 @@ class git_file_server:
     def push_all_files(self):
         for filename in os.scandir(self.path_of_upload_folder):
             if filename.is_file():
-                self.push_file(filename)
+                self.push_file(filename.path)
                 
     # Intend to return an array of all files in image directory
     def pull_all_filename(self):
@@ -51,7 +51,7 @@ class git_file_server:
     
     # Intend to download all files in image directory
     def pull_all_files(self):
-        for i in self.get_all_filename():
+        for i in self.pull_all_filename():
             self.get_file(i)   
     
     # Intend to return file link of given filename
@@ -59,6 +59,24 @@ class git_file_server:
         filename=filename.replace(" ","%")
         return f"https://github.com/{self.repo}/blob/main/{filename}?raw=true"
 
+    # Intend to return all file link
+    def pull_all_file_link(self,filename):
+        file_name_array = self.pull_all_filename()
+        for i in file_name_array:
+            file_name_array.append(self.pull_all_file_link(i))
+            file_name_array.remove(i)
+        return file_name_array
+    
+    # Intend to delete a file in github repository
+    def delete_file(self,filename):
+        contents = self.repository.get_contents(filename, ref=self.branch)
+        self.repository.delete_file(contents.path, f"{contents.path} Deleted", contents.sha)
+    
+    # Intend to delete all files in github repo
+    def delete_all_files(self):
+        filename_array = self.pull_all_filename()
+        for i in filename_array:
+            self.delete_file(i)
 
 
 # class github_store:
