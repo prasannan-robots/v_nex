@@ -35,24 +35,31 @@ class git_file_server:
                 
     # Intend to return an array of all files in image directory
     def pull_all_filename(self):
-        self.files_in_github=self.repository.get_contents("images",ref=self.branch)
+        contents=self.repository.get_contents("",ref=self.branch)
+        while contents:
+            file_content=contents.pop(0)
+            if file_content.type == "dir":
+                contents.extend(self.repository.get_contents(file_content.path))
+            else:
+                self.files_in_github.append(file_content.path)
         return self.files_in_github
     
     # Intend to get file content from github
     def pull_file_content(self,filename):
         contents = self.repository.get_contents(filename, ref=self.branch)
-        return contents.decoded_content.decode()
+        return contents.decoded_content
     
     # Intend to get file and save it in image directory
     def pull_file(self,filename):
-        file_content=self.get_file_content(filename)
+        print(filename)
+        file_content=self.pull_file_content(filename)
         f=open(filename,"wb")
         f.write(file_content)
     
     # Intend to download all files in image directory
     def pull_all_files(self):
         for i in self.pull_all_filename():
-            self.get_file(i)   
+            self.pull_file(i)   
     
     # Intend to return file link of given filename
     def pull_file_link(self,filename):
@@ -60,10 +67,10 @@ class git_file_server:
         return f"https://github.com/{self.repo}/blob/main/{filename}?raw=true"
 
     # Intend to return all file link
-    def pull_all_file_link(self,filename):
+    def pull_all_file_link(self):
         file_name_array = self.pull_all_filename()
         for i in file_name_array:
-            file_name_array.append(self.pull_all_file_link(i))
+            file_name_array.append(self.pull_file_link(i))
             file_name_array.remove(i)
         return file_name_array
     
