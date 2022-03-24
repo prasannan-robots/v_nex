@@ -5,46 +5,59 @@ import os
 class git_file_server:
 
     # Initialing with path_of_upload_folder as the path where the uploaded files will be
-    # Needs a environmental variable with GITHUB_TOKEN as the github api token and GITHUB_REPO as the link to the github repository where the files will be stored
+    # Needs a environmental variable with GITHUB_TOKEN as the github api token and 
+    # GITHUB_REPO as the link to the github repository where the files will be stored
     def __init__(self,path_of_upload_folder):
         self.path_of_upload_folder=path_of_upload_folder
         self.token = os.getenv("GITHUB_TOKEN")
         self.github_object = Github(self.token)
-        self.branch = "main"
-        self.update_files=[]
-        self.repository = self.github_object.get_repo(os.getenv("GITHUB_REPO"))
+        self.branch = "main" # Branch of github repository
+        self.pushed_files=[] # Files pushed till now
+        self.files_in_github=[] # Files that are in github_repository
+        self.repo = os.getenv("GITHUB_REPO")
+        self.repository = self.github_object.get_repo(repo)
     
+    # Intend to push file to github_repo
+    def push_file(self,filename):
+        self.pushed_files.append(filename)
+        f = open(filename,"rb")
+        content = f.read()
+        f.close()
+        self.repository.create_file(filename,f"Updated {filename}",content,branch=self.branch)
+        if os.path.exists(filename):
+            os.remove(filename)
+
     # Intended to push all files in upload_folder to github_repository
-    def add_to_update_file(self):
+    def push_all_files(self):
         for filename in os.scandir(self.path_of_upload_folder):
             if filename.is_file():
-                self.update_files.append(filename.path)
-                f = open(filename.path,"rb")
-                content = f.read()
-                self.repository.create_file(filename.path,f"Updated {filename.path}",content,branch=self.branch)
-                if os.path.exists(filename.path):
-                    os.remove(filename.path)
-
+                self.push_file(filename)
+                
     # Intend to return an array of all files in image directory
-    def get_all_filename(self):
-        return self.repository.get_contents("images",ref=self.branch)
+    def pull_all_filename(self):
+        self.files_in_github=self.repository.get_contents("images",ref=self.branch)
+        return self.files_in_github
     
     # Intend to get file content from github
-    def get_file_content(self,filename):
+    def pull_file_content(self,filename):
         contents = self.repository.get_contents(filename, ref=self.branch)
         return contents.decoded_content.decode()
     
     # Intend to get file and save it in image directory
-    def get_file(self,filename):
+    def pull_file(self,filename):
         file_content=self.get_file_content(filename)
         f=open(filename,"wb")
         f.write(file_content)
     
     # Intend to download all files in image directory
-    def get_all_file(self):
+    def pull_all_files(self):
         for i in self.get_all_filename():
             self.get_file(i)   
-                
+    
+    # Intend to return file link of given filename
+    def pull_file_link(self,filename):
+        filename=filename.replace(" ","%")
+        return f"https://github.com/{self.repo}/blob/main/{filename}?raw=true"
 
 
 
