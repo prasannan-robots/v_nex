@@ -18,10 +18,10 @@ def login():
     except TemplateNotFound:
         abort(404)
 
-@view.route("/dashboard", methods=['POST'])
+@view.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
+    if not 'username' in session and not 'password' in session:
         if request.method == "POST":
-            username = request.form("uname")
-            password = request.form("psw")
-            print(username,password)
+            session['username'] = request.form['username']
+            session['password'] = request.form['password']
             return render_template("dashboard.html",username=username,password=password)
