@@ -69,10 +69,11 @@ class git_file_server:
     # Intend to return all file link
     def pull_all_file_link(self):
         file_name_array = self.pull_all_filename()
+        file_link_array = []
         for i in file_name_array:
-            file_name_array.append(self.pull_file_link(i))
+            file_link_array.append(self.pull_file_link(i))
             file_name_array.remove(i)
-        return file_name_array
+        return file_link_array
     
     # Intend to delete a file in github repository
     def delete_file(self,filename):
