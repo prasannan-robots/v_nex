@@ -2,3 +2,4 @@ env
 github_storage_system/images
 github_storage_system/testing.py
 github_storage_system/__pycache__
+.vscode

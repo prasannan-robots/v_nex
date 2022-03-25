@@ -35,6 +35,7 @@ class git_file_server:
                 
     # Intend to return an array of all files in image directory
     def pull_all_filename(self):
+        self.files_in_github=[]
         contents=self.repository.get_contents("",ref=self.branch)
         while contents:
             file_content=contents.pop(0)
@@ -51,7 +52,6 @@ class git_file_server:
     
     # Intend to get file and save it in image directory
     def pull_file(self,filename):
-        print(filename)
         file_content=self.pull_file_content(filename)
         f=open(filename,"wb")
         f.write(file_content)
@@ -63,7 +63,7 @@ class git_file_server:
     
     # Intend to return file link of given filename
     def pull_file_link(self,filename):
-        filename=filename.replace(" ","%")
+        filename=filename.replace(" ","%20")
         return f"https://github.com/{self.repo}/blob/main/{filename}?raw=true"
 
     # Intend to return all file link
