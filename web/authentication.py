@@ -6,6 +6,7 @@ from flask_login import login_required, current_user,login_user,logout_user
 from flask import current_app as app
 import os
 from ..github_storage_system import github_api
+
 authentication = Blueprint("authentication",__name__,template_folder='templates_login')
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
