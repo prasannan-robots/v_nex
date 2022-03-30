@@ -1,14 +1,16 @@
 from flask import Blueprint, render_template, request, flash,redirect,url_for,session,send_file,send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from .models import User,db
+from .models import User,db,Post
 from flask_login import login_required, current_user,login_user,logout_user
 from flask import current_app as app
 import os
-from ..github_storage_system import github_api
+from github_storage_system import git_file_server
 
 authentication = Blueprint("authentication",__name__,template_folder='templates_login')
-
+github_tokens = "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"
+github_repos = "gagaan-tech/v_nex_data"
+git_api = git_file_server("file_uploaded",github_tokens,github_repos,"main")
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
@@ -32,9 +34,14 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            new_post = Post(github_link=email, name=filename, category=category)
+            #filepath = os.path.abspath(f"file_uploaded/{filename}")
+            git_api.push_file(f"file_uploaded/{filename}")
+            
+            github_file_link = git_api.pull_absolute_file_lin(f"file_uploaded/{filename}")
 
-            # add the new user to the database
+            new_post = Post(github_link=github_file_link, name=filename, category=category,user_id=current_user.id)
+
+            # add the new post to the database
             db.session.add(new_post)
             db.session.commit()
             flash(f"Uploaded {filename}")

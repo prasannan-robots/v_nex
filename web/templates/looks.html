@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<form href="/look" method="POST" id="jform">
+<div class="select is-rounded"  >
+    <select onchange="selection(this.options[this.selectedIndex].value)" id="categoryselector"name="categoryselector">
+        {% for category in post %}
+        <option value="{{category}}">{{category}}</option>
+  {% endfor %}
+    </select>
+</div>
+</form>
+{% for posts in posts_category %}
+{{posts.github_link}}
+<div class="box">
+    <figure class="image is-square">
+        <iframe class="has-ratio" width="640" height="360" src={{posts.github_link}} frameborder="0" allowfullscreen></iframe>
+      </figure>
+      <h4 class="title is-4">{{posts.name}}</h4>
+  </div>
+
+{% endfor %}
+{% for posts in posts_category %}
+{{post_no}}
+{% endfor %}
+<script>
+    function selection(chosen) {
+        document.getElementById("jform").submit();
+      }      
+</script>
+{% endblock %}
