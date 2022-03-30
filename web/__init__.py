@@ -8,10 +8,14 @@ def create_app():
     from .view import view
     from .authentication import authentication
     app = Flask(__name__)
+    UPLOAD_FOLDER = 'file_uploaded'
+    
     # adding configuration for using a sqlite database
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_FOR_FLASK")# for session
+    
     models.db.init_app(app)
     app.register_blueprint(view, url_prefix='/')# added blueprint of view.py to show the page
     app.register_blueprint(authentication,url_prefix="/auth")
@@ -20,10 +24,10 @@ def create_app():
     login_manager.login_view = 'authentication.login'
     login_manager.init_app(app)
 
-    from .models import Profile
+    from .models import User
 
     @login_manager.user_loader
     def load_user(user_id):
         # since the user_id is just the primary key of our user table, use it in the query for the user
-        return Profile.query.get(int(user_id))
+        return User.query.get(int(user_id))
     return app

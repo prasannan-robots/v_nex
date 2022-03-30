@@ -1,7 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
+<h1 class="title" style="margin-bottom: 150px;">
   Welcome, {{ name }}!
 </h1>
+  {% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="notification is-danger">
+  {{ messages[0] }}
+</div>
+{% endif %}
+{% endwith %}
+<form name="myform" method=post enctype=multipart/form-data action="{{ url_for('authentication.upload_file') }}">
+
+  <article class="media">
+    <figure class="media-left">
+      <div class="file is-link">
+        <label class="file-label">
+          <input class="file-input" type="file" name="file">
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="fas fa-upload"></i>
+            </span>
+            <span class="file-label">
+              Choose a file…
+            </span>
+          </span>
+        </label>
+      </div>
+    </figure>
+    
+    <div class="media-content">
+      <div class="field">
+        <p class="control">
+          <input class="input is-link is-rounded" type="text" placeholder="Enter category" name="category">
+        </p>
+      </div>
+      <nav class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <a class="button is-info" type="submit" href="javascript: submitform()">Submit</a>
+          </div>
+        </div>
+        
+      </nav>
+    </div>
+  </article>
+  <div class="field is-horizontal">
+    
+    <div class="field-body">
+      <div class="field">
+        <p class="control">
+          
+        </p>
+      </div>
+    </div>
+  </div>
+  
+</div>
+</form>
+<script>
+  function submitform() {   document.myform.submit(); } 
+  const fileInput = document.querySelector('#file-js-example input[type=file]');
+</script>
 {% endblock %}
