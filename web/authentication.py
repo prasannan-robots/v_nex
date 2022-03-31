@@ -8,8 +8,8 @@ import os
 from github_storage_system import git_file_server
 
 authentication = Blueprint("authentication",__name__,template_folder='templates_login')
-github_tokens = "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"
-github_repos = "gagaan-tech/v_nex_data"
+github_tokens = ""
+github_repos = ""
 git_api = git_file_server("file_uploaded",github_tokens,github_repos,"main")
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
