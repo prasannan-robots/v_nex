@@ -8,7 +8,8 @@ view = Blueprint('view',__name__,template_folder='templates') # adding blueprint
 
 @view.route('/')
 def home():
-    return render_template('home.html',user=current_user)
+    post = [post.category for post in Post.query.all()]
+    return render_template('home.html',user=current_user,post=post)
 
 @view.route('/look',methods=['POST'])
 def look_image():

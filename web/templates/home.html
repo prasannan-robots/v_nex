@@ -7,4 +7,25 @@
 <h2 class="subtitle">
   To Share Intelligence
 </h2>
+
+{% endblock %}
+{% block second_content %}
+<section class="hero is-halfheight is-info">
+  <div class="hero-body">
+    <form action="/look" method="POST" id="jform">
+<div class="select is-rounded">
+    <select onchange="selection(this.options[this.selectedIndex].value)" id="categoryselector"name="categoryselector">
+      <option value="">Select category</option>
+        {% for category in post %}
+        <option value="{{category}}">{{category}}</option>
+  {% endfor %}
+    </select>
+Get Started by selecting category
+</div>
+</form>
+<script>
+  function selection(chosen) {
+      document.getElementById("jform").submit();
+    }      
+</script>
 {% endblock %}

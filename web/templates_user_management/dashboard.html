@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1 class="title" style="margin-bottom: 150px;">
-  Welcome, {{ name }}!
+  Welcome, {{ user.name }}!
 </h1>
   {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -11,7 +11,7 @@
 </div>
 {% endif %}
 {% endwith %}
-<form name="myform" method=post enctype=multipart/form-data action="{{ url_for('authentication.upload_file') }}">
+<form name="myform" method=post enctype=multipart/form-data action="{{ url_for('user_management.upload_file') }}">
 
   <article class="media">
     <figure class="media-left">
@@ -31,6 +31,11 @@
     </figure>
     
     <div class="media-content">
+      <div class="field">
+        <p class="control">
+          <input class="input is-primary is-rounded" type="text" placeholder="Enter Name" name="name">
+        </p>
+      </div>
       <div class="field">
         <p class="control">
           <input class="input is-link is-rounded" type="text" placeholder="Enter category" name="category">
@@ -62,5 +67,43 @@
 <script>
   function submitform() {   document.myform.submit(); } 
   const fileInput = document.querySelector('#file-js-example input[type=file]');
+</script>
+{% endblock %}
+{% block second_content %}
+<section class="hero is-success is-halfheight">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <p class="title">
+        Your Post
+      </p>
+      {% for posts in user.posts %}
+      
+      <div class="box" style="margin-top:40px;">
+        <article class="media">
+        <div class="media-right">
+          <button class="delete" onClick="deleteNote({{ posts.id }})"></button>
+        </div>
+        </article>
+        <div class="container">
+          
+          <img src="{{posts.github_link}}" width="500" height="500" style=" border-radius:8px;">
+        </div>
+            <h4 class="title is-4" style="color:rgb(37, 37, 37)">{{posts.name}}</h4>
+            <a href="{{posts.github_link}}" class="subtitle is-5" style="color:rgb(54, 54, 54)"><i class="fa-solid fa-download" style="font-size: 1.5em;"></i></a>
+      
+            </div>
+{% endfor %}
+ </div>
+  </div>
+</section>
+<script>
+  function deleteNote(noteId) {
+    fetch("/me/delete-post", {
+      method: "POST",
+      body: JSON.stringify({ noteId: noteId }),
+    }).then((_res) => {
+      window.location.href = "/me/dashboard";
+    });
+  }
 </script>
 {% endblock %}

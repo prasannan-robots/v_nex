@@ -15,10 +15,13 @@
 
 {% for posts in posts_category %}
 <div class="box" style="margin-top:40px;">
-<figure class="image is-128x128">
-  <img src="{{posts.github_link}}">
-</figure>
-      <h4 class="title is-4" style="color:black">{{posts.name}}</h4>
+  <div class="container">
+    <h3 class="title is-3" style="color:rgb(37, 37, 37)">By {{posts.username}}</h4>
+    <img src="{{posts.github_link}}" width="500" height="500" style=" border-radius:8px;">
+  </div>
+      <h4 class="title is-4" style="color:rgb(37, 37, 37)">{{posts.name}}</h4>
+      <a href="{{posts.github_link}}" class="subtitle is-5" style="color:rgb(54, 54, 54)"><i class="fa-solid fa-download" style="font-size: 1.5em;"></i></a>
+
       </div>
 {% endfor %}
 <script>

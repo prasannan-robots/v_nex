@@ -7,6 +7,8 @@ from flask_login import LoginManager
 def create_app():
     from .view import view
     from .authentication import authentication
+    from .user_management import user_management
+
     app = Flask(__name__)
     UPLOAD_FOLDER = 'file_uploaded'
     
@@ -19,7 +21,7 @@ def create_app():
     models.db.init_app(app)
     app.register_blueprint(view, url_prefix='/')# added blueprint of view.py to show the page
     app.register_blueprint(authentication,url_prefix="/auth")
-
+    app.register_blueprint(user_management,url_prefix='/me')
     login_manager = LoginManager()
     login_manager.login_view = 'authentication.login'
     login_manager.init_app(app)
