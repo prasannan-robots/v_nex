@@ -8,9 +8,8 @@ import os
 from github_storage_system import git_file_server
 
 authentication = Blueprint("authentication",__name__,template_folder='templates_login')
-github_tokens = ""
-github_repos = ""
-git_api = git_file_server("file_uploaded",github_tokens,github_repos,"main")
+
+git_api = git_file_server("file_uploaded")
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
@@ -37,8 +36,8 @@ def upload_file():
             #filepath = os.path.abspath(f"file_uploaded/{filename}")
             git_api.push_file(f"file_uploaded/{filename}")
             
-            github_file_link = git_api.pull_absolute_file_lin(f"file_uploaded/{filename}")
-
+            github_file_link = git_api.pull_absolute_file_link(f"file_uploaded/{filename}")
+            print(github_file_link)
             new_post = Post(github_link=github_file_link, name=filename, category=category,user_id=current_user.id)
 
             # add the new post to the database
