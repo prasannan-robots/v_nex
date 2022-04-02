@@ -9,6 +9,7 @@ view = Blueprint('view',__name__,template_folder='templates') # adding blueprint
 @view.route('/')
 def home():
     post = [post.category for post in Post.query.all()]
+    post = list(set(post))
     return render_template('home.html',user=current_user,post=post)
 
 @view.route('/look',methods=['POST'])
@@ -17,13 +18,14 @@ def look_image():
     print(category)
     post = [i for i in Post.query.filter_by(category=category).all()]
     post_no = len(post)
-    print(post_no)
     #https://raw.githubusercontent.com/gagaan-tech/v_nex_data/main/file_uploaded/Marshanicky.png
     posts_category = [post.category for post in Post.query.all()]
+    posts_category = list(set(posts_category))
     return render_template('looks.html',posts_category=post,post=posts_category,post_no=post_no)
     
 
 @view.route('/look')
 def look():
     post = [post.category for post in Post.query.all()]
+    post = list(set(post))
     return render_template('looks.html',post=post)
