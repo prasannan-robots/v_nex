@@ -6,13 +6,13 @@ from .models import Post
 
 view = Blueprint('view',__name__,template_folder='templates') # adding blueprint
 
-@view.route('/')
+@view.route('/about')
 def home():
     post = [post.category for post in Post.query.all()]
     post = list(set(post))
     return render_template('home.html',user=current_user,post=post)
 
-@view.route('/look',methods=['POST'])
+@view.route('/',methods=['POST'])
 def look_image():
     category=request.form.get("categoryselector")
     print(category)
@@ -24,7 +24,7 @@ def look_image():
     return render_template('looks.html',posts_category=post,post=posts_category,post_no=post_no)
     
 
-@view.route('/look')
+@view.route('/')
 def look():
     post = [post.category for post in Post.query.all()]
     post = list(set(post))
