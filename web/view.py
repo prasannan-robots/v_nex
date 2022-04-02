@@ -21,6 +21,7 @@ def look_image():
     print(post_no)
     #https://raw.githubusercontent.com/gagaan-tech/v_nex_data/main/file_uploaded/Marshanicky.png
     posts_category = [post.category for post in Post.query.all()]
+    posts_category = list(set(posts_category))
     return render_template('looks.html',posts_category=post,post=posts_category,post_no=post_no)
     
 
