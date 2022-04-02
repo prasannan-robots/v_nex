@@ -16,7 +16,8 @@ def create_app():
     
     # adding configuration for using a sqlite database
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URI")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_FOR_FLASK")# for session
     
