@@ -3,6 +3,8 @@ import os
 from . import models
 from flask_login import LoginManager
 
+DB_NAME="database.db"
+
 # Create app function to create app
 def create_app():
     from .view import view
@@ -27,9 +29,16 @@ def create_app():
     login_manager.init_app(app)
 
     from .models import User
+    create_database(app)
 
     @login_manager.user_loader
     def load_user(user_id):
         # since the user_id is just the primary key of our user table, use it in the query for the user
         return User.query.get(int(user_id))
     return app
+
+
+def create_database(app):
+    if not os.path.exists('web/' + DB_NAME):
+        models.db.create_all(app=app)
+        print('Created Database!')
