@@ -3,7 +3,7 @@ import os
 from . import models
 from flask_login import LoginManager
 
-DB_NAME="database.db"
+
 
 # Create app function to create app
 def create_app():
@@ -16,7 +16,7 @@ def create_app():
     
     # adding configuration for using a sqlite database
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///web/{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_FOR_FLASK")# for session
     
@@ -29,7 +29,7 @@ def create_app():
     login_manager.init_app(app)
 
     from .models import User
-    create_database(app)
+    #create_database(app)
 
     @login_manager.user_loader
     def load_user(user_id):
