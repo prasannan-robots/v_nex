@@ -94,8 +94,11 @@ def delete_post():
     note = json.loads(request.data)
     PostId = note['noteId']
     post = Post.query.get(PostId)
+    print(f"file_uploaded/{post.filename}")
     if post:
         if post.user_id == current_user.id:
+            print(f"file_uploaded/{post.filename}")
+            git_api.delete_file(f"file_uploaded/{post.filename}")
             db.session.delete(post)
             db.session.commit()
 
@@ -108,7 +111,7 @@ def delete_user():
     UserId = user_json['userId']
     user = User.query.get(UserId)
     if user:
-        print(user)
         if user.id == current_user.id:
             db.session.delete(user)
             db.session.commit()
+    return jsonify({})
