@@ -2,12 +2,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h5 class="title is-5">Of the students,By the students, For the students</h3>
+
 <form href="/" method="POST" id="jform">
 <div class="select is-rounded">
     <select onchange="selection(this.options[this.selectedIndex].value)" id="categoryselector"name="categoryselector">
       <option value="">{{category}}</option>
-        {% for category in posts_category %}
-        <option value="{{category}}">{{category}}</option>
+        {% for categories in posts_category %}
+        <option value="{{categories}}">{{categories}}</option>
   {% endfor %}
     </select>
 </div>

@@ -27,4 +27,4 @@ def look_image():
 def look():
     post = [post.category for post in Post.query.all()]
     post = list(set(post))
-    return render_template('looks.html',post=post)
+    return render_template('looks.html',posts_category=post,category="Select Category ->")
