@@ -4,3 +4,4 @@ github_storage_system/
 web/__pycache__
 web/site.db
 testing.py
+env_var.sh

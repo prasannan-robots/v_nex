@@ -5,15 +5,15 @@
 <form href="/" method="POST" id="jform">
 <div class="select is-rounded">
     <select onchange="selection(this.options[this.selectedIndex].value)" id="categoryselector"name="categoryselector">
-      <option value="">Select category</option>
-        {% for category in post %}
+      <option value="">{{category}}</option>
+        {% for category in posts_category %}
         <option value="{{category}}">{{category}}</option>
   {% endfor %}
     </select>
 </div>
 </form>
 
-{% for posts in posts_category %}
+{% for posts in post %}
 <div class="box" style="margin-top:40px;">
   <div class="container">
     <h3 class="title is-3" style="color:rgb(37, 37, 37)">By {{posts.username}}</h4>
