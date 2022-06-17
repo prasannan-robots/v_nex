@@ -3,9 +3,25 @@
 
 {% block content %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
+<article class="message is-primary">
+  <div class="message-header">
+    <p>Join V_NEX</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body">
+    Become a member of v_nex by Signing up
+    <div class="buttons">
+      <a class="button is-primary" href="{{ url_for('authentication.signup') }}">
+        <strong>Sign up</strong>
+      </a>
+      <a class="button is-light" href="{{ url_for('authentication.login') }}">
+        Log in
+      </a>
+    </div> 
+  </div>
+</article>
 <h4 class="title is-4 is-family-monospace">Of the students, By the students, For the students</h3>
-
+  
 <form href="/" method="POST" id="jform">
   <nav class="level" style="padding-top: 10px;">
     <div class="level-item has-text-centered">
