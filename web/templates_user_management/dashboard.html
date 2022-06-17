@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block head %}
+<!-- CSS only -->
+{% endblock %}
 
 {% block content %}
 <h1 class="title" style="margin-bottom: 150px;">
@@ -11,40 +14,61 @@
 </div>
 {% endif %}
 {% endwith %}
-<form name="myform" method=post enctype=multipart/form-data action="{{ url_for('user_management.upload_file') }}">
+<form name="myform" method=post enctype='multipart/form-data' action="{{ url_for('user_management.upload_file') }}">
 
   <article class="media">
-    <figure class="media-left">
-      <div class="file is-link">
-        <label class="file-label">
-          <input class="file-input" type="file" name="file">
-          <span class="file-cta">
-            <span class="file-icon">
-              <i class="fas fa-upload"></i>
-            </span>
-            <span class="file-label">
-              Choose a file…
-            </span>
-          </span>
-        </label>
-      </div>
-    </figure>
+    
     
     <div class="media-content">
       <div class="field">
+        <div class="file is-link">
+          <label class="file-label">
+            <input class="file-input" type="file" name="file[]" multiple>
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                Choose a file…
+              </span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="field">
         <p class="control">
-          <input class="input is-primary is-rounded" type="text" placeholder="Enter Name" name="name">
+          <input class="input is-primary is-rounded" type="text" placeholder="Enter Description" name="description">
         </p>
       </div>
       <div class="field">
         <p class="control">
-          <input class="input is-link is-rounded" type="text" placeholder="Enter category" name="category">
+          <div class="select is-rounded">
+            <select onchange="selection(this.options[this.selectedIndex].value)" id="subjectselector"name="subjectselector">
+              <option value="">Select Subject</option>
+                {% for subject in posts_subject %}
+                <option value="{{subject}}">{{subject}}</option>
+          {% endfor %}
+            </select>
+        
+        </div>
+        </p>
+      </div>
+      <div class="field">
+        <p class="control">
+          <div class="select is-rounded">
+            <select onchange="selection(this.options[this.selectedIndex].value)" id="standardselector"name="standardselector">
+              <option value="">Select Standard</option>
+                {% for standard in posts_standard %}
+                <option value="{{standard}}">{{standard}}</option>
+          {% endfor %}
+            </select>
+          </div>
         </p>
       </div>
       <nav class="level">
         <div class="level-left">
           <div class="level-item">
-            <a class="button is-info" type="submit" href="javascript: submitform()">Submit</a>
+            <a class="button is-success" type="submit" href="javascript: submitform()">Submit</a>
           </div>
         </div>
         
@@ -68,8 +92,11 @@
   function submitform() {   document.myform.submit(); } 
   const fileInput = document.querySelector('#file-js-example input[type=file]');
 </script>
+
 {% endblock %}
 {% block second_content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
 <section class="hero is-success is-halfheight">
   <div class="hero-body">
     <div class="container has-text-centered">
@@ -77,21 +104,41 @@
         Your Post
       </p>
       {% for posts in user.posts %}
-      
-      <div class="box" style="margin-top:40px;">
-        <article class="media">
-        <div class="media-right">
-          <button class="delete" onClick="deleteNote({{ posts.id }})"></button>
-        </div>
-        </article>
-        <div class="container">
-          
-          <img src="{{posts.github_link}}" width="500" height="500" style=" border-radius:8px;">
-        </div>
-            <h4 class="title is-4" style="color:rgb(37, 37, 37)">{{posts.name}}</h4>
-            <a href="{{posts.github_link}}" class="subtitle is-5" style="color:rgb(54, 54, 54)"><i class="fa-solid fa-download" style="font-size: 1.5em;"></i></a>
-      
+      <div class="card mb-3">
+        
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="{{posts.images[0].link}}" class="d-block w-100" alt="...">
             </div>
+            {% for image in posts.images[1:] %}
+            <div class="carousel-item">
+              <img src="{{image.link}}" class="d-block w-100" alt="...">
+            </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{posts.description}}</h5>
+          <p class="card-text"><small class="text-muted">Last updated : {{posts.unique_id}}</small></p>
+          <p class="card-text"><small class="text-muted">Standard : {{posts.standard}}</small></p>
+          <p class="card-text"><small class="text-muted">Subject : {{posts.subject}}</small></p>
+          <p class="card-text"><small class="text-muted">Posted by {{posts.username}}</small></p>
+          <button class="delete" onClick="deleteNote({{posts.id}})"></button>
+          {% for image in posts.images %}
+          <a class="button is-link" href="{{image.link}}"><i class="fa-solid fa-download" style="font-size: 1.5em;"></i></a>
+          {% endfor %}
+        </div>
+      </div>
+      
 {% endfor %}
  </div>
   </div>
@@ -106,4 +153,7 @@
     });
   }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+
 {% endblock %}

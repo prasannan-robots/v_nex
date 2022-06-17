@@ -14,18 +14,28 @@
   <div class="hero-body">
     <form action="/" method="POST" id="jform">
 <div class="select is-rounded">
-    <select onchange="selection(this.options[this.selectedIndex].value)" id="categoryselector"name="categoryselector">
-      <option value="">Select category</option>
-        {% for category in post %}
-        <option value="{{category}}">{{category}}</option>
+    <select onchange="selection(this.options[this.selectedIndex].value)" id="subjectselector"name="subjectselector">
+      <option value="">Select Subject</option>
+        {% for subject in posts_subject %}
+        <option value="{{subject}}">{{subject}}</option>
   {% endfor %}
     </select>
 
 </div>
+
+<div class="select is-rounded">
+  <select onchange="selection(this.options[this.selectedIndex].value)" id="standardselector"name="standardselector">
+    <option value="">Select Standard</option>
+      {% for standard in posts_standard %}
+      <option value="{{standard}}">{{standard}}</option>
+{% endfor %}
+  </select>
+</div>
+<input type="submit" value="Search" class="button is-white">
 </form>
 <script>
-  function selection(chosen) {
-      document.getElementById("jform").submit();
-    }      
+  // function selection(chosen) {
+  //     document.getElementById("jform").submit();
+  //   }      
 </script>
 {% endblock %}
