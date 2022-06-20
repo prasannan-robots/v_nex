@@ -31,8 +31,9 @@ def dashboard():
 @user_management.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_file():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.files.getlist('file[]'):
         print(request.files)
+        
         # check if the post request has the file part
         if 'file[]' not in request.files:
             flash('No file part')
@@ -41,35 +42,52 @@ def upload_file():
         standard = request.form.get('standardselector')
         subject = request.form.get('subjectselector')
         description = request.form.get('description')
+        for i in files:
+            if i.filename=="":
+                flash('No selected file')
+                return redirect(request.url)
+            if not i:
+                flash('No selected file')
+                return redirect(request.url)
+            print(i.content_type)
         now = datetime.now()
         unique_id =  str(now)
         new_post = Post(description=description, standard=standard,subject=subject,user_id=current_user.id,username=current_user.name,unique_id=unique_id)
         db.session.add(new_post)
         db.session.commit()
+        print(files)
+        
         for file in files:
+            
             # If the user does not select a file, the browser submits an
             # empty file without a filename.
+            print(file.filename)
             if file.filename == '':
                 flash('No selected file')
                 return redirect(request.url)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                now = datetime.now()
-                filename =  str(now)+filename
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                #filepath = os.path.abspath(f"file_uploaded/{filename}")
-                try:
-                    git_api.push_file(f"file_uploaded/{filename}")
-                except:
-                    git_api.delete_file(f"file_uploaded/{filename}")
-                    git_api.push_file(f"file_uploaded/{filename}")
-                
-                github_file_link = git_api.pull_absolute_file_link(f"file_uploaded/{filename}")
-                p = Post.query.filter_by(description=description, standard=standard,subject=subject,user_id=current_user.id,username=current_user.name,unique_id=unique_id).first()
-                
-                images = Image(link=github_file_link,post_id=p.id,file_name=filename)
-                # add the new post to the database
-                db.session.add(images)
+            if not file:
+                flash('No selected file')
+                return redirect(request.url)
+            else:
+
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    now = datetime.now()
+                    filename =  str(now)+filename
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    #filepath = os.path.abspath(f"file_uploaded/{filename}")
+                    try:
+                        git_api.push_file(f"file_uploaded/{filename}")
+                    except:
+                        git_api.delete_file(f"file_uploaded/{filename}")
+                        git_api.push_file(f"file_uploaded/{filename}")
+                    
+                    github_file_link = git_api.pull_absolute_file_link(f"file_uploaded/{filename}")
+                    p = Post.query.filter_by(description=description, standard=standard,subject=subject,user_id=current_user.id,username=current_user.name,unique_id=unique_id).first()
+                    
+                    images = Image(link=github_file_link,post_id=p.id,file_name=filename)
+                    # add the new post to the database
+                    db.session.add(images)
                 
         db.session.commit()
         flash(f"Uploaded {filename}")
