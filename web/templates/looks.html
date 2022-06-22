@@ -80,10 +80,14 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">{{posts.description}}</h5>
+          {% for image in posts.images %}
+          <p class="card-text"><small class="text-muted">File Name : {{image.file_pure_name}}</small></p>
+          {% endfor %}
           <p class="card-text"><small class="text-muted">Last updated : {{posts.unique_id}}</small></p>
           <p class="card-text"><small class="text-muted">Standard : {{posts.standard}}</small></p>
           <p class="card-text"><small class="text-muted">Subject : {{posts.subject}}</small></p>
           <p class="card-text"><small class="text-muted">Posted by {{posts.username}}</small></p>
+
           <button class="delete" onClick="deleteNote({{posts.id}})"></button>
           {% for image in posts.images %}
           <a class="button is-link" href="{{image.link}}"><i class="fa-solid fa-download" style="font-size: 1.5em;"></i></a>

@@ -44,10 +44,10 @@ def upload_file():
         description = request.form.get('description')
         for i in files:
             if i.filename=="":
-                flash('No selected file')
+                flash('No selected file if you are uploading from gallery (Gallery file upload is not supported please try to upload from file)')
                 return redirect(request.url)
             if not i:
-                flash('No selected file')
+                flash('No selected file if you are uploading from gallery (Gallery file upload is not supported please try to upload from file)')
                 return redirect(request.url)
             print(i.content_type)
         now = datetime.now()
@@ -63,14 +63,15 @@ def upload_file():
             # empty file without a filename.
             print(file.filename)
             if file.filename == '':
-                flash('No selected file')
+                flash('No selected file if you are uploading from gallery (Gallery file upload is not supported please try to upload from file)')
                 return redirect(request.url)
             if not file:
-                flash('No selected file')
+                flash('No selected file if you are uploading from gallery (Gallery file upload is not supported please try to upload from file)')
                 return redirect(request.url)
             else:
 
                 if file and allowed_file(file.filename):
+                    filename_pure = file.filename
                     filename = secure_filename(file.filename)
                     now = datetime.now()
                     filename =  str(now)+filename
@@ -85,7 +86,7 @@ def upload_file():
                     github_file_link = git_api.pull_absolute_file_link(f"file_uploaded/{filename}")
                     p = Post.query.filter_by(description=description, standard=standard,subject=subject,user_id=current_user.id,username=current_user.name,unique_id=unique_id).first()
                     
-                    images = Image(link=github_file_link,post_id=p.id,file_name=filename)
+                    images = Image(link=github_file_link,post_id=p.id,file_name=filename,file_pure_name=filename_pure)
                     # add the new post to the database
                     db.session.add(images)
                 

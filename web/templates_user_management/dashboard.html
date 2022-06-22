@@ -105,16 +105,28 @@
       </p>
       {% for posts in user.posts %}
       <div class="card mb-3">
-        
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
+            {% if ".pdf" in posts.images[0].link %}
+            <embed src="{{posts.images[0].link}}" width="800px" height="2100px" />
+            <!-- <div class="carousel-item active">
+              <img src="{{posts.images[0].link}}" class="d-block w-100" alt="Download {{posts.images[0].file_pure_name}} from the button below">
+            </div> -->
+            {% else %}
             <div class="carousel-item active">
-              <img src="{{posts.images[0].link}}" class="d-block w-100" alt="...">
+              <img src="{{posts.images[0].link}}" class="d-block w-100" alt="Error loading image Download from the button below">
             </div>
+            {% endif %}
             {% for image in posts.images[1:] %}
+            {% if ".pdf" in image.link %}
             <div class="carousel-item">
-              <img src="{{image.link}}" class="d-block w-100" alt="...">
+              <img src="{{image.link}}" class="d-block w-100" alt="Download {{image.file_pure_name}} from the button below">
             </div>
+            {% else %}
+            <div class="carousel-item">
+              <img src="{{image.link}}" class="d-block w-100" alt="Error loading image Download from the button below">
+            </div>
+            {% endif %}
             {% endfor %}
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -128,6 +140,9 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">{{posts.description}}</h5>
+          {% for image in posts.images %}
+          <p class="card-text"><small class="text-muted">File Name : {{image.file_pure_name}}</small></p>
+          {% endfor %}
           <p class="card-text"><small class="text-muted">Last updated : {{posts.unique_id}}</small></p>
           <p class="card-text"><small class="text-muted">Standard : {{posts.standard}}</small></p>
           <p class="card-text"><small class="text-muted">Subject : {{posts.subject}}</small></p>
